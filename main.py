@@ -4,8 +4,9 @@ import os
 from dotenv import load_dotenv
 from google import genai
 from google.genai import types
-from prompts import system_prompt
+
 from call_function import available_functions
+from prompts import system_prompt
 
 def main():
     parser = argparse.ArgumentParser(description="AI Agent Assistant")
@@ -25,8 +26,8 @@ def main():
 
 def generate_content(client, messages, args):
     response = client.models.generate_content(
-        #model = "gemini-2.5-flash",
-        model = "gemini-3.1-flash-lite-preview",
+        model = "gemini-2.5-flash",
+        #model = "gemini-3.1-flash-lite-preview",
         contents = messages,
         config=types.GenerateContentConfig(
             system_instruction=system_prompt,
@@ -41,13 +42,14 @@ def generate_content(client, messages, args):
         print(f"User prompt: {args.user_prompt}")
         print(f"Prompt tokens: {response.usage_metadata.prompt_token_count}")
         print(f"Response tokens: {response.usage_metadata.candidates_token_count}")
-    print("Response:")
     
-    if response.function_calls:
-       for function_call in response.function_calls: 
-        print(f"Calling function: {function_call.name}({function_call.args})")
-    else:
+    if not response.function_calls:
+        print("Response:")
         print(response.text)
+        return
+
+    for function_call in response.function_calls: 
+        print(f"Calling function: {function_call.name}({function_call.args})")
 
 if __name__ == "__main__":
     main()
