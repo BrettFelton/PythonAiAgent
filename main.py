@@ -26,8 +26,8 @@ def main():
 
 def generate_content(client, messages, args):
     response = client.models.generate_content(
-        model = "gemini-2.5-flash",
-        #model = "gemini-3.1-flash-lite-preview",
+        #model = "gemini-2.5-flash",
+        model = "gemini-3.1-flash-lite-preview",
         contents = messages,
         config=types.GenerateContentConfig(
             system_instruction=system_prompt,
