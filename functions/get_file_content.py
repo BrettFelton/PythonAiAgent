@@ -6,15 +6,15 @@ import os
 def get_file_content(working_directory, file_path):
     try:
         abs_working_dir = os.path.abspath(working_directory)
-        target_path = os.path.normpath(os.path.join(abs_working_dir, file_path))
+        abs_file_path = os.path.normpath(os.path.join(abs_working_dir, file_path))
 
-        if os.path.commonpath([abs_working_dir, target_path]) != abs_working_dir:
+        if os.path.commonpath([abs_working_dir, abs_file_path]) != abs_working_dir:
             return f"Error: Cannot list \"{file_path}\" as it is outside the permitted working directory"
 
-        if not os.path.isfile(target_path):
+        if not os.path.isfile(abs_file_path):
             return f"Error: Cannot read \"{file_path}\" as it is outside the permitted working directory"
 
-        with open(target_path, "r") as f:
+        with open(abs_file_path, "r") as f:
             file_content_string = f.read(MAX_CHARS)
 
             if f.read(1):
